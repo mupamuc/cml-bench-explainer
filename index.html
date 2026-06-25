@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CML-Bench® — Цифровой двойник за 5 шагов</title>
+<style>
+  :root{
+    --bg: oklch(16% 0.02 250);
+    --surface: oklch(24% 0.035 258);
+    --line: oklch(38% 0.04 258);
+    --text: oklch(96% 0.01 250);
+    --muted: oklch(72% 0.02 255);
+    --accent: oklch(72% 0.17 220);
+    --accent-2: oklch(78% 0.16 155);
+    --warn: oklch(78% 0.16 70);
+    --danger: oklch(68% 0.2 25);
+    --radius: 16px;
+    --ease: cubic-bezier(0.16,1,0.3,1);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    background:
+      radial-gradient(1200px 700px at 80% -10%, oklch(30% 0.08 230 / .5), transparent 60%),
+      radial-gradient(900px 600px at -10% 110%, oklch(30% 0.08 155 / .35), transparent 60%),
+      var(--bg);
+    color:var(--text);
+    font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+    line-height:1.5;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:clamp(20px,4vw,56px)}
+  header.top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+  .brand{display:flex;align-items:center;gap:14px}
+  .logo{width:46px;height:46px;border-radius:12px;flex:0 0 auto;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    display:grid;place-items:center;font-weight:800;color:oklch(18% 0.03 250);font-size:20px;
+    box-shadow:0 8px 30px oklch(72% 0.17 220 / .35)}
+  .brand h1{font-size:18px;margin:0;letter-spacing:.2px}
+  .brand p{margin:0;color:var(--muted);font-size:12.5px}
+  .badge{font-size:11.5px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:6px 12px;background:oklch(24% 0.03 258 / .6)}
+  .trust{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+  .trust span{font-size:11px;color:var(--muted);border:1px solid var(--line);border-radius:8px;padding:4px 10px;background:oklch(22% .025 255 / .5)}
+  .trust span b{color:var(--accent-2);font-weight:700}
+
+  .hero{border:1px solid var(--line);border-radius:var(--radius);
+    background:linear-gradient(180deg, oklch(24% 0.04 258 / .8), oklch(20% 0.03 255 / .6));
+    padding:clamp(20px,3vw,34px);position:relative;overflow:hidden}
+  .hero::after{content:"";position:absolute;inset:0;background:
+    repeating-linear-gradient(90deg, oklch(100% 0 0 / .03) 0 1px, transparent 1px 64px),
+    repeating-linear-gradient(0deg, oklch(100% 0 0 / .03) 0 1px, transparent 1px 64px);
+    mask:radial-gradient(600px 300px at 70% 0%, #000, transparent 70%);pointer-events:none}
+  .hero h2{font-size:clamp(24px,3.4vw,38px);margin:.1em 0 .25em;line-height:1.12}
+  .hero h2 b{color:var(--accent-2)}
+  .hero .sub{color:var(--muted);max-width:62ch;font-size:15px}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:22px}
+  .stat{border:1px solid var(--line);border-radius:12px;padding:14px;background:oklch(20% 0.025 255 / .5)}
+  .stat .n{font-size:22px;font-weight:800}
+  .stat .l{font-size:12px;color:var(--muted)}
+
+  .steps{display:flex;gap:8px;margin:30px 0 12px;flex-wrap:wrap}
+  .pill{border:1px solid var(--line);background:var(--surface);color:var(--muted);
+    border-radius:999px;padding:9px 14px;font-size:13px;cursor:pointer;transition:.25s var(--ease);
+    display:flex;align-items:center;gap:8px;user-select:none}
+  .pill .dot{width:8px;height:8px;border-radius:50%;background:var(--line)}
+  .pill[aria-selected="true"]{color:var(--text);border-color:var(--accent);background:oklch(30% 0.07 225 / .5)}
+  .pill[aria-selected="true"] .dot{background:var(--accent)}
+  .pill.done .dot{background:var(--accent-2)}
+
+  .panel{border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);
+    padding:clamp(18px,2.6vw,30px);min-height:300px;position:relative}
+  .panel .k{color:var(--accent);font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700}
+  .panel h3{margin:.3em 0 .4em;font-size:clamp(20px,2.6vw,27px)}
+  .panel p{color:var(--muted);max-width:64ch}
+  .panel .body{display:grid;grid-template-columns:1.1fr .9fr;gap:24px}
+  @media(max-width:760px){.panel .body{grid-template-columns:1fr}}
+  @media(max-width:560px){
+    .wrap{padding:15px}
+    header.top{gap:10px}
+    .badge{display:none}
+    .hero{padding:18px}
+    .hero h2{font-size:21px}
+    .hero .sub{font-size:13.5px}
+    .stats{grid-template-columns:1fr 1fr;gap:8px}
+    .stat{padding:11px}.stat .n{font-size:17px}
+    .steps{gap:6px;margin:20px 0 10px}
+    .pill{padding:7px 10px;font-size:12px}
+    .panel{min-height:0;padding:16px}
+    .panel h3{font-size:19px}
+    .panel .body{gap:16px}
+    .viz{min-height:165px;padding:14px}
+    .nav{flex-direction:column}
+    button.btn{width:100%}
+    .gauge{height:128px;gap:12px}
+    .bar{width:46px}
+    .twin{width:160px;height:160px}
+    .twin .core{inset:62px}.twin .ring.r2{inset:20px}.twin .ring.r3{inset:42px}
+    footer{font-size:11.5px}
+    .hint{text-align:center}
+  }
+  .viz{border:1px solid var(--line);border-radius:12px;background:linear-gradient(180deg, oklch(18% 0.02 255), oklch(22% 0.03 258));
+    min-height:230px;display:grid;place-items:center;padding:18px;overflow:hidden}
+
+  ul.clean{list-style:none;padding:0;margin:14px 0 0}
+  ul.clean li{display:flex;gap:10px;padding:7px 0;border-bottom:1px dashed var(--line);font-size:14.5px}
+  ul.clean li::before{content:"▹";color:var(--accent-2)}
+
+  .nav{display:flex;justify-content:space-between;margin-top:18px;gap:12px}
+  button.btn{font:inherit;cursor:pointer;border-radius:11px;padding:12px 20px;border:1px solid var(--line);
+    background:var(--surface);color:var(--text);transition:.2s var(--ease)}
+  button.btn:hover{border-color:var(--accent);transform:translateY(-1px)}
+  button.btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:oklch(18% 0.03 250);border:0;font-weight:700}
+  button.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+
+  .opt{width:100%}
+  .gauge{display:flex;gap:16px;align-items:flex-end;justify-content:center;height:150px;margin-bottom:8px}
+  .bar{width:54px;border-radius:8px 8px 0 0;background:linear-gradient(180deg,var(--accent),oklch(60% 0.12 220));position:relative;transition:height .4s var(--ease),background .3s}
+  .bar.safety{background:linear-gradient(180deg,var(--accent-2),oklch(62% 0.12 155))}
+  .bar.bad{background:linear-gradient(180deg,var(--danger),oklch(55% 0.16 25))}
+  .bar span{position:absolute;top:-22px;left:50%;transform:translateX(-50%);font-size:13px;font-weight:700;white-space:nowrap}
+  .bar small{position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);font-size:11px;color:var(--muted)}
+  input[type=range]{width:100%;accent-color:var(--accent)}
+  .verdict{margin-top:26px;font-size:14px;text-align:center;min-height:20px}
+  .verdict.ok{color:var(--accent-2)}.verdict.no{color:var(--warn)}
+
+  .twin{position:relative;width:200px;height:200px}
+  .twin .ring{position:absolute;inset:0;border:2px solid var(--line);border-radius:50%}
+  .twin .ring.r2{inset:26px;border-color:oklch(45% 0.06 225)}
+  .twin .ring.r3{inset:54px;border-color:oklch(55% 0.1 225)}
+  .twin .core{position:absolute;inset:78px;border-radius:50%;background:radial-gradient(circle,var(--accent),oklch(45% 0.12 225));box-shadow:0 0 40px var(--accent)}
+  .twin .node{position:absolute;width:11px;height:11px;border-radius:50%;background:var(--accent-2);box-shadow:0 0 12px var(--accent-2)}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .twin .orbit{position:absolute;inset:0;animation:spin 9s linear infinite}
+  .twin .orbit.b{inset:26px;animation-duration:6s;animation-direction:reverse}
+  @media(prefers-reduced-motion:reduce){.twin .orbit{animation:none}*{transition:none!important}}
+
+  /* quiz */
+  .quiz .q{font-size:17px;font-weight:600;margin:4px 0 16px}
+  .opts{display:grid;gap:10px}
+  .ans{text-align:left;border:1px solid var(--line);background:oklch(22% .03 255 / .6);color:var(--text);
+    border-radius:11px;padding:13px 16px;font:inherit;cursor:pointer;transition:.18s var(--ease)}
+  .ans:hover{border-color:var(--accent)}
+  .ans.correct{border-color:var(--accent-2);background:oklch(30% .09 155 / .35)}
+  .ans.wrong{border-color:var(--danger);background:oklch(30% .1 25 / .3)}
+  .ans:disabled{cursor:default}
+  .qmeta{display:flex;justify-content:space-between;color:var(--muted);font-size:12.5px;margin-bottom:6px}
+  .explain{margin-top:14px;font-size:13.5px;color:var(--muted);min-height:20px}
+  .explain b{color:var(--accent-2)}
+  .result{text-align:center;padding:10px}
+  .result .score{font-size:60px;font-weight:800;color:var(--accent-2);line-height:1}
+  .result .rmsg{color:var(--muted);margin:8px 0 20px}
+  .cta{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+
+  footer{margin-top:30px;color:var(--muted);font-size:12.5px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;border-top:1px solid var(--line);padding-top:16px}
+  .made b{color:var(--accent-2)}
+  .progress{height:4px;background:var(--line);border-radius:4px;overflow:hidden;margin:12px 0 16px}
+  .progress i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));width:20%;transition:width .4s var(--ease)}
+  .hint{color:var(--muted);font-size:11.5px;text-align:right;margin-top:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <div class="logo">CB</div>
+      <div>
+        <h1>CML-Bench® · Интерактивная демонстрация ценности</h1>
+        <p>Цифровой двойник от требования до результата — за 5 шагов + проверка знаний</p>
+      </div>
+    </div>
+    <div class="badge">Демо-прототип · собрано в Claude Code</div>
+  </header>
+  <div class="trust">
+    <span><b>ГОСТ Р</b> 57700.37–2021</span>
+    <span><b>FSTEC</b> сертификат</span>
+    <span>Контур <b>Astra Linux</b> · Postgres Pro</span>
+    <span>Реестр <b>российского ПО</b></span>
+  </div>
+
+  <section class="hero">
+    <h2>Что такое <b>цифровой двойник</b> и зачем он заказчику?</h2>
+    <p class="sub">Вместо десятков дорогих натурных образцов — сотни виртуальных испытаний. Платформа хранит требования, модели, расчётные цепочки и результаты в одном месте и автоматизирует инженерный труд. Ниже — интерактивный разбор логики платформы по пяти шагам и короткая проверка знаний.</p>
+    <div class="stats">
+      <div class="stat"><div class="n">392&nbsp;000+</div><div class="l">проектных решений за 11 лет</div></div>
+      <div class="stat"><div class="n">~100</div><div class="l">виртуальных испытаний в день</div></div>
+      <div class="stat"><div class="n">~7&nbsp;300</div><div class="l">ядер в работе ежечасно</div></div>
+      <div class="stat"><div class="n">~1.2&nbsp;ПБ</div><div class="l">накопленных данных</div></div>
+    </div>
+  </section>
+
+  <div class="steps" id="steps" role="tablist"></div>
+  <div class="progress"><i id="bar"></i></div>
+
+  <section class="panel" id="panel"></section>
+  <div class="hint">Навигация: клавиши ← / → или кнопки</div>
+
+  <footer>
+    <div class="made">Интерактивная демонстрация. Данные — из материалов CML-Bench®. Сборка: <b>Claude Code</b>.</div>
+    <div>Один HTML · офлайн · без зависимостей</div>
+  </footer>
+</div>
+
+<script>
+const steps = [
+  {t:"Матрица требований",k:"Что должно получиться",
+   text:"Любой проект начинается с целевых показателей и ограничений: масса, прочность, ресурс, стоимость, сроки. Платформа держит их как живую матрицу требований с уровнями и трассировкой — каждое решение видно «откуда и зачем».",
+   list:["Целевые показатели и ресурсные ограничения","Многоуровневая трассировка требований","Библиотека требований для повторного использования"],
+   viz:`<div style="width:100%">
+     <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:6px"><span>Показатель</span><span>Цель</span></div>
+     ${[["Масса узла","≤ 12.0 кг"],["Запас прочности","≥ 1.5"],["Ресурс","≥ 10⁶ циклов"],["Стоимость","↓ −15%"]].map(r=>`<div style="display:flex;justify-content:space-between;border:1px solid var(--line);border-radius:9px;padding:9px 12px;margin-bottom:7px;font-size:13.5px"><span>${r[0]}</span><b style="color:var(--accent-2)">${r[1]}</b></div>`).join("")}
+   </div>`},
+  {t:"Цифровой макет и модель",k:"Из чего считаем",
+   text:"К требованиям привязывается цифровой макет (DMU) и расчётные модели — CAD-геометрия, конечно-элементные сетки, граничные условия и нагрузки. Всё версионируется в дереве проекта: ничего не теряется, любой вариант воспроизводим.",
+   list:["CAD-геометрия и конечно-элементные модели","Управление нагрузками и граничными условиями","Дерево эволюции проекта (цифровой след)"],
+   viz:`<div class="twin"><div class="ring"></div><div class="ring r2"></div><div class="ring r3"></div>
+     <div class="orbit"><div class="node" style="left:50%;top:-5px;transform:translateX(-50%)"></div></div>
+     <div class="orbit b"><div class="node" style="left:50%;top:-5px;transform:translateX(-50%)"></div></div>
+     <div class="core"></div></div>`},
+  {t:"Расчётная цепочка",k:"Автоматизация труда",
+   text:"Шаги расчёта собираются в цепочку и запускаются на супер-ЭВМ. Рутинные операции инженер не повторяет руками — цепочка прогоняет препроцессинг, решатель и постобработку автоматически, на тысячах ядер.",
+   list:["Препроцессинг → решатель → постобработка","Запуск на HPC-кластере (тысячи ядер)","Повторяемость и контроль версий расчёта"],
+   viz:`<div style="width:100%">${["Препроцессинг","Решатель (FEA)","Постобработка","Отчёт"].map((s,i)=>`
+       <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+         <div style="width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:oklch(18% .03 250);font-weight:800;font-size:13px">${i+1}</div>
+         <div style="flex:1;border:1px solid var(--line);border-radius:9px;padding:9px 12px;font-size:13.5px">${s}</div>
+       </div>${i<3?'<div style="margin-left:14px;color:var(--accent);font-size:13px">↓</div>':''}`).join("")}</div>`},
+  {t:"Виртуальные испытания",k:"Главная идея",
+   text:"Вот где экономия. Один физический образец стоит дорого и считается неделями. Виртуальный полигон гоняет сотни вариантов конструкции и находит оптимум. Покрутите ползунок — уберите лишний металл, но не уроните запас прочности ниже нормы.",
+   list:["Сотни вариантов вместо натурных образцов","Поиск оптимума: легче, дешевле, надёжнее","Решение до того, как что-то изготовлено"],
+   viz:`<div class="opt">
+     <div class="gauge">
+       <div class="bar" id="bMass" style="height:120px"><span id="vMass">12.0 кг</span><small>Масса</small></div>
+       <div class="bar safety" id="bSafe" style="height:120px"><span id="vSafe">1.50</span><small>Запас</small></div>
+       <div class="bar" id="bCost" style="height:120px"><span id="vCost">100%</span><small>Стоимость</small></div>
+     </div>
+     <input type="range" id="opt" min="0" max="100" value="0" />
+     <div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);margin-top:4px"><span>Толстая конструкция</span><span>Облегчённая</span></div>
+     <div class="verdict" id="verdict">Двигайте ползунок — ищите оптимум.</div>
+   </div>`},
+  {t:"Результат и решение",k:"Что увидит заказчик",
+   text:"Платформа выдаёт обоснованный вариант: показатели в норме, история решений прозрачна, всё подтверждено по ГОСТ Р 57700.37–2021. Заказчик получает не «картинку», а воспроизводимое инженерное решение и экономию времени и денег.",
+   list:["Обоснованный оптимальный вариант","Полная трассировка и воспроизводимость","Соответствие ГОСТ Р 57700.37–2021 · контур Astra Linux / Postgres Pro"],
+   viz:`<div style="text-align:center">
+     <div style="font-size:54px;font-weight:800;color:var(--accent-2);line-height:1">−18%</div>
+     <div style="color:var(--muted);font-size:13px;margin-bottom:14px">масса узла при сохранении запаса ≥ 1.5</div>
+     <div style="display:inline-block;border:1px solid var(--accent-2);border-radius:999px;padding:8px 16px;font-size:13px;color:var(--accent-2)">✓ Требования выполнены</div>
+     <div style="color:var(--muted);font-size:12px;margin-top:14px">найдено за часы виртуальных испытаний,<br/>а не недели натурных образцов</div>
+   </div>`}
+];
+
+const quiz = [
+  {q:"Зачем нужны виртуальные испытания вместо натурных образцов?",
+   a:["Чтобы заменить инженеров","Сотни вариантов дёшево и быстро — поиск оптимума до изготовления","Только ради красивых картинок"],c:1,
+   e:"Главная ценность: <b>проверить сотни вариантов</b> и найти оптимум ещё до того, как что-то изготовлено."},
+  {q:"Что удерживает связь «откуда взялось решение»?",
+   a:["Матрица требований и дерево проекта (трассировка)","Папка на рабочем столе","Память инженера"],c:0,
+   e:"<b>Трассировка требований</b> и дерево эволюции делают любой вариант воспроизводимым."},
+  {q:"Облегчили узел так, что запас прочности упал ниже 1.5. Это…",
+   a:["Отлично, чем легче тем лучше","Опасно — нарушено требование, вариант отклоняется","Неважно для цифрового двойника"],c:1,
+   e:"Оптимум — это <b>граница</b>: легче и дешевле, но не нарушая целевые показатели."}
+];
+
+let cur=0, mode="steps", qi=0, score=0, answered=false;
+const stepsEl=document.getElementById("steps"), panel=document.getElementById("panel"), bar=document.getElementById("bar");
+const TOTAL=steps.length+1; // 5 шагов + квиз
+
+steps.forEach((s,i)=>{const p=document.createElement("div");p.className="pill";p.setAttribute("role","tab");
+  p.innerHTML=`<span class="dot"></span>${i+1}. ${s.t}`;p.onclick=()=>{mode="steps";go(i)};stepsEl.appendChild(p);});
+const qp=document.createElement("div");qp.className="pill";qp.id="qpill";
+qp.innerHTML=`<span class="dot"></span>✓ Проверка знаний`;qp.onclick=()=>startQuiz();stepsEl.appendChild(qp);
+
+function setProgress(n){bar.style.width=(n/TOTAL*100)+"%";}
+function markPills(active){[...stepsEl.querySelectorAll(".pill")].forEach((p,i)=>{
+  const isQuiz=p.id==="qpill";
+  p.setAttribute("aria-selected", isQuiz ? (mode!=="steps") : (mode==="steps"&&i===cur));
+  if(!isQuiz) p.classList.toggle("done", mode!=="steps" || i<cur);
+});}
+
+function renderStep(){
+  const s=steps[cur];
+  panel.innerHTML=`
+    <div class="k">Шаг ${cur+1} / 5 · ${s.k}</div>
+    <h3>${s.t}</h3>
+    <div class="body"><div><p>${s.text}</p><ul class="clean">${s.list.map(x=>`<li>${x}</li>`).join("")}</ul></div>
+      <div class="viz">${s.viz}</div></div>
+    <div class="nav">
+      <button class="btn" id="prev" ${cur===0?"disabled":""}>← Назад</button>
+      <button class="btn primary" id="next">${cur===steps.length-1?"К проверке →":"Дальше →"}</button>
+    </div>`;
+  document.getElementById("prev").onclick=()=>go(cur-1);
+  document.getElementById("next").onclick=()=>{cur===steps.length-1?startQuiz():go(cur+1)};
+  if(cur===3) wireOptimizer();
+  setProgress(cur+1);markPills();
+}
+function go(i){cur=Math.max(0,Math.min(steps.length-1,i));mode="steps";renderStep();}
+
+function startQuiz(){mode="quiz";qi=0;score=0;answered=false;renderQuiz();}
+function renderQuiz(){
+  const item=quiz[qi];
+  panel.innerHTML=`
+    <div class="quiz">
+      <div class="qmeta"><span>Проверка знаний</span><span>Вопрос ${qi+1} / ${quiz.length} · Баллов: ${score}</span></div>
+      <div class="q">${item.q}</div>
+      <div class="opts">${item.a.map((a,i)=>`<button class="ans" data-i="${i}">${a}</button>`).join("")}</div>
+      <div class="explain" id="explain"></div>
+      <div class="nav"><button class="btn" id="qprev">← К шагам</button><button class="btn primary" id="qnext" disabled>${qi===quiz.length-1?"Итог →":"Дальше →"}</button></div>
+    </div>`;
+  answered=false;
+  panel.querySelectorAll(".ans").forEach(b=>b.onclick=()=>pick(+b.dataset.i));
+  document.getElementById("qprev").onclick=()=>go(steps.length-1);
+  document.getElementById("qnext").onclick=()=>{qi===quiz.length-1?showResult():(qi++,renderQuiz())};
+  setProgress(TOTAL);markPills();
+}
+function pick(i){
+  if(answered)return;answered=true;
+  const item=quiz[qi],btns=panel.querySelectorAll(".ans");
+  btns.forEach((b,bi)=>{b.disabled=true;if(bi===item.c)b.classList.add("correct");if(bi===i&&i!==item.c)b.classList.add("wrong");});
+  if(i===item.c)score++;
+  document.getElementById("explain").innerHTML=(i===item.c?"✓ Верно. ":"✗ Не совсем. ")+item.e;
+  document.getElementById("qnext").disabled=false;
+  document.querySelector(".qmeta span:last-child").textContent=`Вопрос ${qi+1} / ${quiz.length} · Баллов: ${score}`;
+}
+function showResult(){
+  mode="done";
+  const msg = score===quiz.length ? "Отлично — ценность платформы понятна полностью."
+            : score>=2 ? "Хорошо — основная логика цифрового двойника усвоена."
+            : "Стоит пройти шаги ещё раз — суть в виртуальных испытаниях и трассировке.";
+  panel.innerHTML=`<div class="result">
+    <div class="score">${score}/${quiz.length}</div>
+    <div class="rmsg">${msg}</div>
+    <div class="cta">
+      <button class="btn" id="again">↻ Пройти заново</button>
+      <button class="btn primary" id="retake">Повторить проверку</button>
+    </div>
+    <div style="margin-top:22px;color:var(--muted);font-size:12.5px">Так же быстро Claude Code соберёт интерактивный модуль под <b style="color:var(--accent-2)">любой</b> раздел и сценарий CML-Bench.</div>
+  </div>`;
+  document.getElementById("again").onclick=()=>go(0);
+  document.getElementById("retake").onclick=()=>startQuiz();
+  markPills();
+}
+
+function wireOptimizer(){
+  const opt=document.getElementById("opt");if(!opt)return;
+  const upd=()=>{const t=+opt.value/100;
+    const mass=12.0-t*3.0, safety=1.9-t*0.7, cost=100-t*22;
+    vMass.textContent=mass.toFixed(1)+" кг";vSafe.textContent=safety.toFixed(2);vCost.textContent=Math.round(cost)+"%";
+    bMass.style.height=(60+mass*7)+"px";bSafe.style.height=(safety*80)+"px";bCost.style.height=(cost*1.2)+"px";
+    const v=document.getElementById("verdict");
+    if(safety<1.5){bSafe.classList.add("bad");v.className="verdict no";v.textContent="✗ Запас прочности ниже нормы 1.5 — конструкция опасна. Чуть назад.";}
+    else{bSafe.classList.remove("bad");v.className="verdict ok";
+      v.textContent=(t>0.5&&safety>=1.5)?"✓ Оптимум: легче и дешевле, запас в норме. Это и есть ценность.":"✓ В норме. Можно облегчать — до границы запаса 1.5.";}
+  };
+  opt.oninput=upd;upd();
+}
+
+document.addEventListener("keydown",e=>{
+  if(e.key==="ArrowRight"){if(mode==="steps")(cur===steps.length-1?startQuiz():go(cur+1));}
+  if(e.key==="ArrowLeft"){if(mode==="steps"&&cur>0)go(cur-1);else if(mode!=="steps")go(steps.length-1);}
+});
+
+renderStep();
+</script>
+</body>
+</html>
