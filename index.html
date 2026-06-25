@@ -225,7 +225,7 @@ const steps = [
          <div style="flex:1;border:1px solid var(--line);border-radius:9px;padding:9px 12px;font-size:13.5px">${s}</div>
        </div>${i<3?'<div style="margin-left:14px;color:var(--accent);font-size:13px">↓</div>':''}`).join("")}</div>`},
   {t:"Виртуальные испытания",k:"Главная идея",
-   text:"Вот где экономия. Один физический образец стоит дорого и считается неделями. Виртуальный полигон гоняет сотни вариантов конструкции и находит оптимум. Покрутите ползунок — уберите лишний металл, но не уроните запас прочности ниже нормы.",
+   text:"Вот где экономия. Натурный образец дорог и считается неделями. Виртуальный полигон прогоняет сотни вариантов конструкции и находит оптимум. Двигайте ползунок — снижайте толщину сечения, но не опускайте запас прочности ниже нормы.",
    list:["Сотни вариантов вместо натурных образцов","Поиск оптимума: легче, дешевле, надёжнее","Решение до того, как что-то изготовлено"],
    viz:`<div class="opt">
      <div class="gauge">
@@ -234,7 +234,7 @@ const steps = [
        <div class="bar" id="bCost" style="height:120px"><span id="vCost">100%</span><small>Стоимость</small></div>
      </div>
      <input type="range" id="opt" min="0" max="100" value="0" />
-     <div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);margin-top:4px"><span>Толстая конструкция</span><span>Облегчённая</span></div>
+     <div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);margin-top:4px"><span>Исходное сечение</span><span>Облегчённое сечение</span></div>
      <div class="verdict" id="verdict">Двигайте ползунок — ищите оптимум.</div>
    </div>`},
   {t:"Результат и решение",k:"Что увидит заказчик",
@@ -346,7 +346,7 @@ function wireOptimizer(){
     vMass.textContent=mass.toFixed(1)+" кг";vSafe.textContent=safety.toFixed(2);vCost.textContent=Math.round(cost)+"%";
     bMass.style.height=(60+mass*7)+"px";bSafe.style.height=(safety*80)+"px";bCost.style.height=(cost*1.2)+"px";
     const v=document.getElementById("verdict");
-    if(safety<1.5){bSafe.classList.add("bad");v.className="verdict no";v.textContent="✗ Запас прочности ниже нормы 1.5 — конструкция опасна. Чуть назад.";}
+    if(safety<1.5){bSafe.classList.add("bad");v.className="verdict no";v.textContent="✗ Запас прочности < 1.5 — недопустимо по нормам прочности. Увеличьте сечение.";}
     else{bSafe.classList.remove("bad");v.className="verdict ok";
       v.textContent=(t>0.5&&safety>=1.5)?"✓ Оптимум: легче и дешевле, запас в норме. Это и есть ценность.":"✓ В норме. Можно облегчать — до границы запаса 1.5.";}
   };
