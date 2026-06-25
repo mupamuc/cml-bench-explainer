@@ -6,6 +6,32 @@
 <title>CML-Bench® — Цифровой двойник за 5 шагов</title>
 <style>
   :root{
+    /* СВЕТЛАЯ ТЕМА — по умолчанию */
+    --bg: oklch(98.5% 0.003 250);
+    --surface: oklch(100% 0 0);
+    --line: oklch(90% 0.008 255);
+    --text: oklch(24% 0.02 255);
+    --muted: oklch(48% 0.02 255);
+    --accent: oklch(52% 0.16 245);
+    --accent-2: oklch(50% 0.13 160);
+    --warn: oklch(56% 0.15 60);
+    --danger: oklch(55% 0.2 25);
+    --glow1: oklch(72% 0.1 230 / .12);
+    --glow2: oklch(72% 0.1 155 / .10);
+    --chip-bg: oklch(97% 0.006 255);
+    --hero-from: oklch(98% 0.01 250);
+    --hero-to: oklch(96% 0.012 255);
+    --grid-line: oklch(20% 0 0 / .045);
+    --pill-active-bg: oklch(95% 0.035 240);
+    --viz-from: oklch(98% 0.004 255);
+    --viz-to: oklch(95.5% 0.01 255);
+    --ok-bg: oklch(93% 0.07 155 / .55);
+    --bad-bg: oklch(93% 0.08 25 / .5);
+    --logo-ink: oklch(100% 0 0);
+    --radius: 16px;
+    --ease: cubic-bezier(0.16,1,0.3,1);
+  }
+  :root[data-theme="dark"]{
     --bg: oklch(16% 0.02 250);
     --surface: oklch(24% 0.035 258);
     --line: oklch(38% 0.04 258);
@@ -15,15 +41,25 @@
     --accent-2: oklch(78% 0.16 155);
     --warn: oklch(78% 0.16 70);
     --danger: oklch(68% 0.2 25);
-    --radius: 16px;
-    --ease: cubic-bezier(0.16,1,0.3,1);
+    --glow1: oklch(30% 0.08 230 / .5);
+    --glow2: oklch(30% 0.08 155 / .35);
+    --chip-bg: oklch(22% .03 258 / .6);
+    --hero-from: oklch(24% 0.04 258 / .8);
+    --hero-to: oklch(20% 0.03 255 / .6);
+    --grid-line: oklch(100% 0 0 / .03);
+    --pill-active-bg: oklch(30% 0.07 225 / .5);
+    --viz-from: oklch(18% 0.02 255);
+    --viz-to: oklch(22% 0.03 258);
+    --ok-bg: oklch(30% .09 155 / .35);
+    --bad-bg: oklch(30% .1 25 / .3);
+    --logo-ink: oklch(18% 0.03 250);
   }
   *{box-sizing:border-box}
   html,body{margin:0}
   body{
     background:
-      radial-gradient(1200px 700px at 80% -10%, oklch(30% 0.08 230 / .5), transparent 60%),
-      radial-gradient(900px 600px at -10% 110%, oklch(30% 0.08 155 / .35), transparent 60%),
+      radial-gradient(1200px 700px at 80% -10%, var(--glow1), transparent 60%),
+      radial-gradient(900px 600px at -10% 110%, var(--glow2), transparent 60%),
       var(--bg);
     color:var(--text);
     font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
@@ -34,27 +70,27 @@
   .brand{display:flex;align-items:center;gap:14px}
   .logo{width:46px;height:46px;border-radius:12px;flex:0 0 auto;
     background:linear-gradient(135deg,var(--accent),var(--accent-2));
-    display:grid;place-items:center;font-weight:800;color:oklch(18% 0.03 250);font-size:20px;
+    display:grid;place-items:center;font-weight:800;color:var(--logo-ink);font-size:20px;
     box-shadow:0 8px 30px oklch(72% 0.17 220 / .35)}
   .brand h1{font-size:18px;margin:0;letter-spacing:.2px}
   .brand p{margin:0;color:var(--muted);font-size:12.5px}
-  .badge{font-size:11.5px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:6px 12px;background:oklch(24% 0.03 258 / .6)}
+  .badge{font-size:11.5px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:6px 12px;background:var(--chip-bg)}
   .trust{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
-  .trust span{font-size:11px;color:var(--muted);border:1px solid var(--line);border-radius:8px;padding:4px 10px;background:oklch(22% .025 255 / .5)}
+  .trust span{font-size:11px;color:var(--muted);border:1px solid var(--line);border-radius:8px;padding:4px 10px;background:var(--chip-bg)}
   .trust span b{color:var(--accent-2);font-weight:700}
 
   .hero{border:1px solid var(--line);border-radius:var(--radius);
-    background:linear-gradient(180deg, oklch(24% 0.04 258 / .8), oklch(20% 0.03 255 / .6));
+    background:linear-gradient(180deg, var(--hero-from), var(--hero-to));
     padding:clamp(20px,3vw,34px);position:relative;overflow:hidden}
   .hero::after{content:"";position:absolute;inset:0;background:
-    repeating-linear-gradient(90deg, oklch(100% 0 0 / .03) 0 1px, transparent 1px 64px),
-    repeating-linear-gradient(0deg, oklch(100% 0 0 / .03) 0 1px, transparent 1px 64px);
+    repeating-linear-gradient(90deg, var(--grid-line) 0 1px, transparent 1px 64px),
+    repeating-linear-gradient(0deg, var(--grid-line) 0 1px, transparent 1px 64px);
     mask:radial-gradient(600px 300px at 70% 0%, #000, transparent 70%);pointer-events:none}
   .hero h2{font-size:clamp(24px,3.4vw,38px);margin:.1em 0 .25em;line-height:1.12}
   .hero h2 b{color:var(--accent-2)}
   .hero .sub{color:var(--muted);max-width:62ch;font-size:15px}
   .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:22px}
-  .stat{border:1px solid var(--line);border-radius:12px;padding:14px;background:oklch(20% 0.025 255 / .5)}
+  .stat{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--chip-bg)}
   .stat .n{font-size:22px;font-weight:800}
   .stat .l{font-size:12px;color:var(--muted)}
 
@@ -63,7 +99,7 @@
     border-radius:999px;padding:9px 14px;font-size:13px;cursor:pointer;transition:.25s var(--ease);
     display:flex;align-items:center;gap:8px;user-select:none}
   .pill .dot{width:8px;height:8px;border-radius:50%;background:var(--line)}
-  .pill[aria-selected="true"]{color:var(--text);border-color:var(--accent);background:oklch(30% 0.07 225 / .5)}
+  .pill[aria-selected="true"]{color:var(--text);border-color:var(--accent);background:var(--pill-active-bg)}
   .pill[aria-selected="true"] .dot{background:var(--accent)}
   .pill.done .dot{background:var(--accent-2)}
 
@@ -98,7 +134,7 @@
     footer{font-size:11.5px}
     .hint{text-align:center}
   }
-  .viz{border:1px solid var(--line);border-radius:12px;background:linear-gradient(180deg, oklch(18% 0.02 255), oklch(22% 0.03 258));
+  .viz{border:1px solid var(--line);border-radius:12px;background:linear-gradient(180deg, var(--viz-from), var(--viz-to));
     min-height:230px;display:grid;place-items:center;padding:18px;overflow:hidden}
 
   ul.clean{list-style:none;padding:0;margin:14px 0 0}
@@ -109,7 +145,7 @@
   button.btn{font:inherit;cursor:pointer;border-radius:11px;padding:12px 20px;border:1px solid var(--line);
     background:var(--surface);color:var(--text);transition:.2s var(--ease)}
   button.btn:hover{border-color:var(--accent);transform:translateY(-1px)}
-  button.btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:oklch(18% 0.03 250);border:0;font-weight:700}
+  button.btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:var(--logo-ink);border:0;font-weight:700}
   button.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
 
   .opt{width:100%}
@@ -137,11 +173,11 @@
   /* quiz */
   .quiz .q{font-size:17px;font-weight:600;margin:4px 0 16px}
   .opts{display:grid;gap:10px}
-  .ans{text-align:left;border:1px solid var(--line);background:oklch(22% .03 255 / .6);color:var(--text);
+  .ans{text-align:left;border:1px solid var(--line);background:var(--chip-bg);color:var(--text);
     border-radius:11px;padding:13px 16px;font:inherit;cursor:pointer;transition:.18s var(--ease)}
   .ans:hover{border-color:var(--accent)}
-  .ans.correct{border-color:var(--accent-2);background:oklch(30% .09 155 / .35)}
-  .ans.wrong{border-color:var(--danger);background:oklch(30% .1 25 / .3)}
+  .ans.correct{border-color:var(--accent-2);background:var(--ok-bg)}
+  .ans.wrong{border-color:var(--danger);background:var(--bad-bg)}
   .ans:disabled{cursor:default}
   .qmeta{display:flex;justify-content:space-between;color:var(--muted);font-size:12.5px;margin-bottom:6px}
   .explain{margin-top:14px;font-size:13.5px;color:var(--muted);min-height:20px}
@@ -156,6 +192,9 @@
   .progress{height:4px;background:var(--line);border-radius:4px;overflow:hidden;margin:12px 0 16px}
   .progress i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));width:20%;transition:width .4s var(--ease)}
   .hint{color:var(--muted);font-size:11.5px;text-align:right;margin-top:6px}
+  .themeBtn{font:inherit;cursor:pointer;border:1px solid var(--line);background:var(--chip-bg);color:var(--muted);
+    border-radius:999px;padding:7px 14px;font-size:12px;transition:.18s var(--ease);display:inline-flex;align-items:center;gap:7px}
+  .themeBtn:hover{border-color:var(--accent);color:var(--text)}
 </style>
 </head>
 <body>
@@ -196,7 +235,10 @@
 
   <footer>
     <div class="made">Интерактивная демонстрация. Данные — из материалов CML-Bench®. Сборка: <b>Claude Code</b>.</div>
-    <div>Один HTML · офлайн · без зависимостей</div>
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <button class="themeBtn" id="themeBtn" type="button">🌙 Тёмная тема</button>
+      <span>Один HTML · офлайн</span>
+    </div>
   </footer>
 </div>
 
@@ -221,7 +263,7 @@ const steps = [
    list:["Препроцессинг → решатель → постобработка","Запуск на HPC-кластере (тысячи ядер)","Повторяемость и контроль версий расчёта"],
    viz:`<div style="width:100%">${["Препроцессинг","Решатель (FEA)","Постобработка","Отчёт"].map((s,i)=>`
        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-         <div style="width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:oklch(18% .03 250);font-weight:800;font-size:13px">${i+1}</div>
+         <div style="width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:var(--logo-ink);font-weight:800;font-size:13px">${i+1}</div>
          <div style="flex:1;border:1px solid var(--line);border-radius:9px;padding:9px 12px;font-size:13.5px">${s}</div>
        </div>${i<3?'<div style="margin-left:14px;color:var(--accent);font-size:13px">↓</div>':''}`).join("")}</div>`},
   {t:"Виртуальные испытания",k:"Главная идея",
@@ -359,6 +401,18 @@ document.addEventListener("keydown",e=>{
 });
 
 renderStep();
+
+/* theme toggle — светлая по умолчанию, тёмная по кнопке */
+(function(){
+  const root=document.documentElement, btn=document.getElementById("themeBtn");
+  let saved=null; try{saved=localStorage.getItem("cml-theme");}catch(e){}
+  function apply(t){
+    if(t==="dark"){root.setAttribute("data-theme","dark");btn.textContent="☀️ Светлая тема";}
+    else{root.removeAttribute("data-theme");btn.textContent="🌙 Тёмная тема";}
+  }
+  apply(saved==="dark"?"dark":"light");
+  btn.onclick=()=>{const dark=root.getAttribute("data-theme")!=="dark";apply(dark?"dark":"light");try{localStorage.setItem("cml-theme",dark?"dark":"light");}catch(e){}};
+})();
 </script>
 </body>
 </html>
