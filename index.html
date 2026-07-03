@@ -147,10 +147,10 @@
   ul.clean li::before{content:"▹";color:var(--accent-2)}
 
   .nav{display:flex;justify-content:space-between;margin-top:18px;gap:12px}
-  button.btn{font:inherit;cursor:pointer;border-radius:11px;padding:12px 20px;border:1px solid var(--line);
-    background:var(--surface);color:var(--text);transition:.2s var(--ease)}
-  button.btn:hover{border-color:var(--accent);transform:translateY(-1px)}
-  button.btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:var(--logo-ink);border:0;font-weight:700}
+  button.btn,a.btn{font:inherit;cursor:pointer;border-radius:11px;padding:12px 20px;border:1px solid var(--line);
+    background:var(--surface);color:var(--text);transition:.2s var(--ease);text-decoration:none;display:inline-block}
+  button.btn:hover,a.btn:hover{border-color:var(--accent);transform:translateY(-1px)}
+  button.btn.primary,a.btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:var(--logo-ink);border:0;font-weight:700}
   button.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
 
   .opt{width:100%}
@@ -249,6 +249,17 @@
 
   <section class="panel" id="panel"></section>
   <div class="hint">Навигация: клавиши ← / → или кнопки</div>
+
+  <section class="panel" style="margin-top:26px;min-height:0">
+    <div class="k">Следующий шаг</div>
+    <h3>Пилот за 2 недели</h3>
+    <p>Фиксированный скоуп: 1 узел вашего изделия · 1 виртуальное испытание · отчёт-сравнение с натурным.
+    Критерий успеха согласуем письменно до старта. Данные — в защищённом контуре (Astra Linux, FSTEC).</p>
+    <div class="cta" style="justify-content:flex-start;margin-top:16px">
+      <a class="btn primary" href="mailto:it@spb.energy?subject=CML-Bench%20%E2%80%94%20%D0%B7%D0%B0%D0%BF%D1%80%D0%BE%D1%81%20%D0%BF%D0%B8%D0%BB%D0%BE%D1%82%D0%B0">✉ Запросить пилот</a>
+      <a class="btn" href="https://mupamuc.github.io/cml-bench-roi/">Оценить эффект в рублях →</a>
+    </div>
+  </section>
 
   <footer>
     <div class="made">Интерактивная демонстрация. Данные — из материалов CML-Bench®. Сборка: <b>Claude Code</b>.</div>
